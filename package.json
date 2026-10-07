@@ -12,6 +12,7 @@
     "dev:game": "npm run dev --workspace @helm/game -- --host 127.0.0.1",
     "dev:server": "npm run dev --workspace @helm/server",
     "dev": "node scripts/dev.mjs",
+    "build:sites": "node scripts/build-sites-worker.mjs",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "vitest run",
     "validate:content": "vitest run tests/content",
