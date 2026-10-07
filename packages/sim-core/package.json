@@ -1,0 +1,20 @@
+{
+  "name": "@helm/sim-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@helm/cards": "file:../cards",
+    "@helm/content-schema": "file:../content-schema",
+    "@helm/economy": "file:../economy",
+    "@helm/entity-graph": "file:../entity-graph",
+    "@helm/events": "file:../events",
+    "@helm/policy-engine": "file:../policy-engine",
+    "@helm/trust-ledger": "file:../trust-ledger"
+  }
+}

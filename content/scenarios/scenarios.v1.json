@@ -1,0 +1,121 @@
+{
+  "schemaVersion": 1,
+  "scenarios": [
+    {
+      "schemaVersion": 1,
+      "id": "standard",
+      "name": "Standard Sandbox",
+      "description": "The baseline HELM simulation with deliberate progression and balanced pacing across the shared control-room runtime.",
+      "startingCash": 350000,
+      "startingTrust": 92,
+      "defaultSpeed": 1,
+      "startPaused": true,
+      "initialUnlockedPacks": [
+        "pack_1_cfo",
+        "pack_2_relocation",
+        "pack_3_elder"
+      ],
+      "unlockTrustFloor": 75,
+      "spawnChancePerHour": 0.12,
+      "spawnRateMultiplier": 1,
+      "queueSoftCap": 14,
+      "backlogAlarmThreshold": 22,
+      "severityWeights": {
+        "green": 0.3,
+        "yellow": 1,
+        "orange": 0.92,
+        "red": 0.74,
+        "black": 0.42
+      },
+      "onboardingChecklist": [
+        "Run the sim only after you can read the queue and the right-rail alarms.",
+        "Use Always approve on routine yellow and orange work to keep the queue under control.",
+        "Escalate medical, regulatory, and treasury edge cases instead of chasing raw speed."
+      ],
+      "grantMilestones": []
+    },
+    {
+      "schemaVersion": 1,
+      "id": "public-demo",
+      "name": "Public Demo Showcase",
+      "description": "A staged nine-pack showcase tuned for a 12 to 18 minute public demo, with fast funding milestones and clearer control-room feedback.",
+      "startingCash": 300000,
+      "startingTrust": 94,
+      "defaultSpeed": 2,
+      "startPaused": true,
+      "initialUnlockedPacks": [
+        "pack_1_cfo",
+        "pack_2_relocation",
+        "pack_3_elder"
+      ],
+      "unlockTrustFloor": 68,
+      "spawnChancePerHour": 0.25,
+      "spawnRateMultiplier": 1.5,
+      "queueSoftCap": 18,
+      "backlogAlarmThreshold": 22,
+      "severityWeights": {
+        "green": 0.3,
+        "yellow": 1,
+        "orange": 0.94,
+        "red": 0.72,
+        "black": 0.36
+      },
+      "onboardingChecklist": [
+        "Start paused, read the queue, and pick the card with the highest blast radius first.",
+        "Use Run, Pause, and 2x or 4x speed to control intake instead of letting backlog dictate the session.",
+        "Turn routine yellow or orange cards into policies so the demo can scale across all nine packs.",
+        "Watch milestone grants in Capital and unlock the next pack as soon as trust and cash allow it."
+      ],
+      "grantMilestones": [
+        {
+          "id": "demo_l10n",
+          "triggerHour": 120,
+          "cashGrant": 250000,
+          "trustBonus": 1,
+          "title": "Localization budget unlocked",
+          "note": "Capital partners greenlit the first expansion wave. L10n can come online now."
+        },
+        {
+          "id": "demo_permit",
+          "triggerHour": 300,
+          "cashGrant": 1000000,
+          "trustBonus": 1,
+          "title": "Municipal expansion line",
+          "note": "Civic operations funding arrived. Permit workflows are now within reach."
+        },
+        {
+          "id": "demo_supplier",
+          "triggerHour": 540,
+          "cashGrant": 2000000,
+          "trustBonus": 1,
+          "title": "Enterprise quality budget",
+          "note": "Manufacturing leads want in. Supplier Quality can be unlocked."
+        },
+        {
+          "id": "demo_data",
+          "triggerHour": 840,
+          "cashGrant": 3000000,
+          "trustBonus": 1,
+          "title": "Connector revenue milestone",
+          "note": "Integration customers converted quickly. Data Connector is now funded."
+        },
+        {
+          "id": "demo_clinical",
+          "triggerHour": 1200,
+          "cashGrant": 5000000,
+          "trustBonus": 2,
+          "title": "Clinical diligence round",
+          "note": "Regulated healthcare buyers committed budget. Clinical Evidence can now launch."
+        },
+        {
+          "id": "demo_treasury",
+          "triggerHour": 1620,
+          "cashGrant": 10000000,
+          "trustBonus": 2,
+          "title": "Treasury showcase tranche",
+          "note": "Institutional capital arrived for the final demo expansion. Treasury is ready to unlock."
+        }
+      ]
+    }
+  ]
+}

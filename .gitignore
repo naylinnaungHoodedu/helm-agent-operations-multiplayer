@@ -1,0 +1,14 @@
+node_modules
+dist
+coverage
+.next
+.turbo
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+.docx_render_*
+fix*.py
+e2e_browser*.ts

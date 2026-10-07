@@ -1,0 +1,41 @@
+{
+  "name": "@helm/game",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -p tsconfig.json && vite build",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@helm/cards": "file:../../packages/cards",
+    "@helm/content-schema": "file:../../packages/content-schema",
+    "@helm/entity-graph": "file:../../packages/entity-graph",
+    "@helm/events": "file:../../packages/events",
+    "@helm/policy-engine": "file:../../packages/policy-engine",
+    "@helm/sim-core": "file:../../packages/sim-core",
+    "@react-three/drei": "^10.7.9",
+    "@react-three/fiber": "^9.8.1",
+    "@types/three": "^0.186.0",
+    "@xstate/react": "^6.1.0",
+    "howler": "^2.2.4",
+    "idb": "^8.0.3",
+    "phaser": "^3.90.0",
+    "pixi.js": "^8.18.1",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "recharts": "^3.8.1",
+    "socket.io-client": "^4.8.4",
+    "three": "^0.186.1",
+    "xstate": "^5.30.0"
+  },
+  "devDependencies": {
+    "@types/howler": "^2.2.12",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.8"
+  }
+}

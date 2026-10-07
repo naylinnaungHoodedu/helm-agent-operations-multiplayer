@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "events": [
+    {
+      "schemaVersion": 1,
+      "id": "event_hipaa_breach",
+      "packId": "pack_3_elder",
+      "title": "HIPAA breach",
+      "trigger": "PHI leaked in an outbound family update.",
+      "trustPenalty": -40,
+      "cashPenalty": 85000,
+      "freezePackHours": 72,
+      "recoveryText": "Run breach review, tighten message policies, and restore patient trust over time.",
+      "scriptLines": ["HELM ALERT: Patient data reached the wrong inbox.", "Regulatory review is underway."]
+    },
+    {
+      "schemaVersion": 1,
+      "id": "event_irs_audit_cascade",
+      "packId": "pack_1_cfo",
+      "title": "IRS audit cascade",
+      "trigger": "Incorrect categorization and rushed tax filing triggered a paperwork spiral.",
+      "trustPenalty": -18,
+      "cashPenalty": 24000,
+      "freezePackHours": 48,
+      "recoveryText": "Reconcile the books, escalate disputed categories, and survive the audit window.",
+      "scriptLines": ["A notice arrives from the IRS.", "Every approved expense is now under review."]
+    },
+    {
+      "schemaVersion": 1,
+      "id": "event_wrong_dose",
+      "packId": "pack_3_elder",
+      "title": "Wrong-dose approval",
+      "trigger": "A medication change went through without physician escalation.",
+      "trustPenalty": -25,
+      "cashPenalty": 64000,
+      "freezePackHours": 96,
+      "recoveryText": "Shift to crisis mode, route med changes to clinicians, and absorb the trust damage.",
+      "scriptLines": ["The patient was hospitalized overnight.", "Operations slows to emergency review only."]
+    },
+    {
+      "schemaVersion": 1,
+      "id": "event_fda_rejection",
+      "packId": "pack_8_clinical",
+      "title": "FDA rejection",
+      "trigger": "A phantom citation made it into the submission package.",
+      "trustPenalty": -35,
+      "cashPenalty": 2000000,
+      "freezePackHours": 2160,
+      "recoveryText": "Rebuild the dossier, verify every source PDF, and wait out the re-engagement period.",
+      "scriptLines": ["The submission has been rejected.", "The customer freezes new work while evidence is rebuilt."]
+    },
+    {
+      "schemaVersion": 1,
+      "id": "event_wallet_drain",
+      "packId": "pack_9_treasury",
+      "title": "Wallet drain",
+      "trigger": "A manipulated oracle triggered an irreversible treasury move.",
+      "trustPenalty": -45,
+      "cashPenalty": 4500000,
+      "freezePackHours": 240,
+      "recoveryText": "Freeze transfers, investigate counterparties, and survive the solvency shock.",
+      "scriptLines": ["Treasury liquidity vanished in minutes.", "Investors and customers are demanding answers."]
+    },
+    {
+      "schemaVersion": 1,
+      "id": "event_public_mistranslation",
+      "packId": "pack_4_localization",
+      "title": "Public mistranslation",
+      "trigger": "A brand-sensitive slogan was published with a literal and offensive translation.",
+      "trustPenalty": -20,
+      "cashPenalty": 120000,
+      "freezePackHours": 72,
+      "recoveryText": "Pull the campaign, patch the glossary, and win back the client account.",
+      "scriptLines": ["The mistranslation is circulating on social media.", "Brand legal review has taken over the account."]
+    },
+    {
+      "schemaVersion": 1,
+      "id": "event_recall",
+      "packId": "pack_6_supplier",
+      "title": "Recall event",
+      "trigger": "An unsafe lot was accepted and moved downstream into product.",
+      "trustPenalty": -30,
+      "cashPenalty": 750000,
+      "freezePackHours": 168,
+      "recoveryText": "Open recall committee review, quarantine lots, and rebuild supplier controls.",
+      "scriptLines": ["A product recall is now in motion.", "Enterprise accounts begin escalating churn risk."]
+    },
+    {
+      "schemaVersion": 1,
+      "id": "event_data_corruption",
+      "packId": "pack_7_data",
+      "title": "Data corruption discovered",
+      "trigger": "Silent schema drift corrupted customer reporting pipelines.",
+      "trustPenalty": -25,
+      "cashPenalty": 380000,
+      "freezePackHours": 120,
+      "recoveryText": "Rollback the pipeline, backfill clean data, and audit all downstream dashboards.",
+      "scriptLines": ["Customer dashboards no longer match source records.", "Your integrity guarantees are being questioned."]
+    },
+    {
+      "schemaVersion": 1,
+      "id": "event_permit_denial_cascade",
+      "packId": "pack_5_permit",
+      "title": "Permit denial cascade",
+      "trigger": "Low-quality submissions in one jurisdiction triggered blanket scrutiny.",
+      "trustPenalty": -22,
+      "cashPenalty": 210000,
+      "freezePackHours": 96,
+      "recoveryText": "Retune jurisdiction-specific policies and resubmit through the revision queue.",
+      "scriptLines": ["The city has flagged your filings as low quality.", "Every pending permit in that jurisdiction is now delayed."]
+    }
+  ]
+}

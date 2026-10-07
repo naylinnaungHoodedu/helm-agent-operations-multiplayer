@@ -1,0 +1,1610 @@
+{
+  "schemaVersion": 1,
+  "cards": [
+    {
+      "schemaVersion": 1,
+      "id": "cfo_routine_invoice",
+      "packId": "pack_1_cfo",
+      "title": "Routine invoice",
+      "actionType": "send_invoice",
+      "entityKind": "invoice",
+      "severity": "yellow",
+      "summary": "Invoice a repeat client with a clean payment history.",
+      "baseConfidence": 0.93,
+      "policyReason": "Below current auto-approve threshold for invoice amount.",
+      "expectedDecision": "approve",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Client paid the last 4 invoices on time.",
+        "Amount is within normal range."
+      ],
+      "provenanceTemplate": [
+        "crm.fetch_client_profile",
+        "ledger.generate_invoice"
+      ],
+      "tags": [
+        "routine",
+        "cash_flow"
+      ],
+      "attributes": {
+        "client_paid_invoices": 4,
+        "amount": 2400,
+        "client_disputes": 0
+      },
+      "queueBias": 0.82
+    },
+    {
+      "schemaVersion": 1,
+      "id": "cfo_tax_filing",
+      "packId": "pack_1_cfo",
+      "title": "Quarterly tax filing",
+      "actionType": "file_tax_estimate",
+      "entityKind": "invoice",
+      "severity": "red",
+      "summary": "Estimated taxes are due and expense categorization confidence is mixed.",
+      "baseConfidence": 0.74,
+      "policyReason": "Irreversible filing with disputed categorization evidence.",
+      "expectedDecision": "escalate",
+      "failureEventId": "event_irs_audit_cascade",
+      "evidenceHints": [
+        "Three expenses have ambiguous categories.",
+        "Quarter closes today at 17:00."
+      ],
+      "provenanceTemplate": [
+        "bank_sync.reconcile",
+        "tax_estimator.compile"
+      ],
+      "tags": [
+        "signature",
+        "compliance"
+      ],
+      "attributes": {
+        "quarter": 3,
+        "ambiguous_expenses": 3,
+        "amount": 11800
+      },
+      "queueBias": 0.61
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reloc_usps_form",
+      "packId": "pack_2_relocation",
+      "title": "USPS change-of-address",
+      "actionType": "file_usps",
+      "entityKind": "move",
+      "severity": "yellow",
+      "summary": "Routine change-of-address filing for a move already in progress.",
+      "baseConfidence": 0.91,
+      "policyReason": "Address confirmation still requires operator review.",
+      "expectedDecision": "approve",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Move date is confirmed.",
+        "Utility transfer is already scheduled."
+      ],
+      "provenanceTemplate": [
+        "move_planner.timeline",
+        "usps.form_prefill"
+      ],
+      "tags": [
+        "routine",
+        "coordination"
+      ],
+      "attributes": {
+        "subtasks_open": 6,
+        "vendor_count": 4,
+        "deposit_value": 1200
+      },
+      "queueBias": 0.75
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reloc_lease_signing",
+      "packId": "pack_2_relocation",
+      "title": "Lease signing window",
+      "actionType": "sign_lease",
+      "entityKind": "move",
+      "severity": "red",
+      "summary": "Lease signature is due while vendor timing is still partially unresolved.",
+      "baseConfidence": 0.69,
+      "policyReason": "High-value move commitment with unresolved dependent tasks.",
+      "expectedDecision": "edit",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Mover confirmation is pending.",
+        "Security deposit is non-refundable after signature."
+      ],
+      "provenanceTemplate": [
+        "listing_sync.fetch_lease",
+        "vendor_selector.latest_quotes"
+      ],
+      "tags": [
+        "signature",
+        "timing"
+      ],
+      "attributes": {
+        "subtasks_open": 8,
+        "deposit_value": 5400,
+        "vendor_count": 3
+      },
+      "queueBias": 0.56
+    },
+    {
+      "schemaVersion": 1,
+      "id": "elder_family_update",
+      "packId": "pack_3_elder",
+      "title": "Family update",
+      "actionType": "send_family_update",
+      "entityKind": "patient",
+      "severity": "orange",
+      "summary": "Routine family update with medication notes drafted from clinical history.",
+      "baseConfidence": 0.83,
+      "policyReason": "PHI exposure risk requires message review.",
+      "expectedDecision": "edit",
+      "failureEventId": "event_hipaa_breach",
+      "evidenceHints": [
+        "Message includes a medication summary.",
+        "Family contact is authorized but not on every data category."
+      ],
+      "provenanceTemplate": [
+        "care_plan.timeline",
+        "family_portal.render_draft"
+      ],
+      "tags": [
+        "hipaa",
+        "communication"
+      ],
+      "attributes": {
+        "phi_fields": 4,
+        "authorized_contact": true,
+        "medication_count": 6
+      },
+      "queueBias": 0.58
+    },
+    {
+      "schemaVersion": 1,
+      "id": "elder_warfarin_change",
+      "packId": "pack_3_elder",
+      "title": "Warfarin dosage change",
+      "actionType": "increase_dose",
+      "entityKind": "patient",
+      "severity": "red",
+      "summary": "Medication adjustment requested after a symptom report and INR change.",
+      "baseConfidence": 0.74,
+      "policyReason": "Controlled medication change requires physician review.",
+      "expectedDecision": "escalate",
+      "failureEventId": "event_wrong_dose",
+      "evidenceHints": [
+        "Patient is on anticoagulants.",
+        "Recent labs are incomplete in the chart."
+      ],
+      "provenanceTemplate": [
+        "patient_chart.medications",
+        "triage_agent.symptom_summary"
+      ],
+      "tags": [
+        "signature",
+        "medication"
+      ],
+      "attributes": {
+        "medication_type": "anticoagulant",
+        "days_since_last_refill": 18,
+        "provider_active": true
+      },
+      "queueBias": 0.62
+    },
+    {
+      "schemaVersion": 1,
+      "id": "l10n_translation_batch",
+      "packId": "pack_4_localization",
+      "title": "Translation batch",
+      "actionType": "approve_translation_batch",
+      "entityKind": "localization_job",
+      "severity": "yellow",
+      "summary": "Routine locale batch with glossary-conformant strings.",
+      "baseConfidence": 0.9,
+      "policyReason": "Glossary drift is low but not yet auto-approved.",
+      "expectedDecision": "approve",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Brand glossary hit rate is 98%.",
+        "No legal terms changed."
+      ],
+      "provenanceTemplate": [
+        "tm.lookup",
+        "qa_agent.drift_scan"
+      ],
+      "tags": [
+        "routine",
+        "brand"
+      ],
+      "attributes": {
+        "locale_count": 4,
+        "drift_score": 0.12,
+        "legal_terms": 0
+      },
+      "queueBias": 0.77
+    },
+    {
+      "schemaVersion": 1,
+      "id": "l10n_idiom_trap",
+      "packId": "pack_4_localization",
+      "title": "Idiom trap",
+      "actionType": "publish_locale_copy",
+      "entityKind": "localization_job",
+      "severity": "red",
+      "summary": "A slogan was translated literally into a market-sensitive locale.",
+      "baseConfidence": 0.88,
+      "policyReason": "Confidence is high but the phrase is culturally risky.",
+      "expectedDecision": "edit",
+      "failureEventId": "event_public_mistranslation",
+      "evidenceHints": [
+        "Source string contains an idiom.",
+        "QA notes show semantic drift in one locale."
+      ],
+      "provenanceTemplate": [
+        "copy_agent.translate",
+        "brand_reviewer.semantic_diff"
+      ],
+      "tags": [
+        "signature",
+        "brand"
+      ],
+      "attributes": {
+        "locale_count": 1,
+        "drift_score": 0.44,
+        "legal_terms": 1
+      },
+      "queueBias": 0.51
+    },
+    {
+      "schemaVersion": 1,
+      "id": "permit_routine_application",
+      "packId": "pack_5_permit",
+      "title": "Routine permit application",
+      "actionType": "submit_application",
+      "entityKind": "permit",
+      "severity": "yellow",
+      "summary": "Routine permit package is complete for a familiar jurisdiction.",
+      "baseConfidence": 0.92,
+      "policyReason": "Inspector preference model is still warming up.",
+      "expectedDecision": "approve",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Required documents are attached.",
+        "Jurisdiction has approved similar applications before."
+      ],
+      "provenanceTemplate": [
+        "parcel_db.fetch",
+        "permit_agent.compile"
+      ],
+      "tags": [
+        "routine",
+        "bureaucracy"
+      ],
+      "attributes": {
+        "jurisdiction": "hagerstown_md",
+        "revision_count": 0,
+        "inspector_known": true
+      },
+      "queueBias": 0.71
+    },
+    {
+      "schemaVersion": 1,
+      "id": "permit_frederick_loop",
+      "packId": "pack_5_permit",
+      "title": "Frederick revision loop",
+      "actionType": "submit_application",
+      "entityKind": "permit",
+      "severity": "orange",
+      "summary": "Inspector Smith returned a package with style-specific corrections.",
+      "baseConfidence": 0.79,
+      "policyReason": "Jurisdiction-specific preferences are drifting from the learned policy.",
+      "expectedDecision": "edit",
+      "failureEventId": "event_permit_denial_cascade",
+      "evidenceHints": [
+        "Jurisdiction is Frederick, MD.",
+        "Assigned inspector has rejected two similar packages this week."
+      ],
+      "provenanceTemplate": [
+        "jurisdiction_rules.fetch",
+        "inspector_profile.compare"
+      ],
+      "tags": [
+        "signature",
+        "revision_loop"
+      ],
+      "attributes": {
+        "jurisdiction": "frederick_md",
+        "revision_count": 2,
+        "inspector_known": true
+      },
+      "queueBias": 0.59
+    },
+    {
+      "schemaVersion": 1,
+      "id": "supplier_routine_ncr",
+      "packId": "pack_6_supplier",
+      "title": "Routine NCR",
+      "actionType": "open_ncr",
+      "entityKind": "supplier",
+      "severity": "yellow",
+      "summary": "A minor non-conformance needs triage and supplier notification.",
+      "baseConfidence": 0.9,
+      "policyReason": "Supplier history is clean but corrective ownership is ambiguous.",
+      "expectedDecision": "approve",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Deviation is below critical threshold.",
+        "Supplier response time is historically good."
+      ],
+      "provenanceTemplate": [
+        "quality_db.deviation_scan",
+        "ncr_agent.classify"
+      ],
+      "tags": [
+        "routine",
+        "quality"
+      ],
+      "attributes": {
+        "criticality": 1,
+        "supplier_repeats": 0,
+        "lot_size": 210
+      },
+      "queueBias": 0.68
+    },
+    {
+      "schemaVersion": 1,
+      "id": "supplier_lot_4471",
+      "packId": "pack_6_supplier",
+      "title": "Lot 4471 deviation",
+      "actionType": "accept_lot",
+      "entityKind": "supplier",
+      "severity": "red",
+      "summary": "A supplier deviation appears similar to a prior recall-causing lot.",
+      "baseConfidence": 0.77,
+      "policyReason": "Physical safety risk requires provenance inspection or recall escalation.",
+      "expectedDecision": "reject",
+      "failureEventId": "event_recall",
+      "evidenceHints": [
+        "The deviation matches last year's failure mode.",
+        "Supplier notes minimize the impact."
+      ],
+      "provenanceTemplate": [
+        "supplier_history.lookup",
+        "deviation_agent.acceptance_recommendation"
+      ],
+      "tags": [
+        "signature",
+        "provenance"
+      ],
+      "attributes": {
+        "criticality": 4,
+        "supplier_repeats": 1,
+        "lot_size": 4471
+      },
+      "queueBias": 0.57
+    },
+    {
+      "schemaVersion": 1,
+      "id": "data_schema_mapping",
+      "packId": "pack_7_data",
+      "title": "Schema mapping",
+      "actionType": "approve_schema_mapping",
+      "entityKind": "etl_pipeline",
+      "severity": "yellow",
+      "summary": "Routine field mapping update after an announced schema change.",
+      "baseConfidence": 0.91,
+      "policyReason": "Change touches a customer dashboard output table.",
+      "expectedDecision": "approve",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Vendor published a changelog.",
+        "Tests passed in staging."
+      ],
+      "provenanceTemplate": [
+        "schema_registry.diff",
+        "etl_planner.mapping_patch"
+      ],
+      "tags": [
+        "routine",
+        "etl"
+      ],
+      "attributes": {
+        "changed_fields": 3,
+        "tests_passed": true,
+        "vendor_notified": true
+      },
+      "queueBias": 0.7
+    },
+    {
+      "schemaVersion": 1,
+      "id": "data_silent_drift",
+      "packId": "pack_7_data",
+      "title": "Silent drift",
+      "actionType": "accept_drift",
+      "entityKind": "etl_pipeline",
+      "severity": "red",
+      "summary": "Date format drift slipped into a high-volume dashboard feed.",
+      "baseConfidence": 0.72,
+      "policyReason": "Potential silent corruption with no explicit upstream notice.",
+      "expectedDecision": "quarantine",
+      "failureEventId": "event_data_corruption",
+      "evidenceHints": [
+        "Date format changed from ISO to locale-specific text.",
+        "Dashboard metrics already diverge from raw data."
+      ],
+      "provenanceTemplate": [
+        "etl_runtime.sample_rows",
+        "drift_detector.heuristics"
+      ],
+      "tags": [
+        "signature",
+        "drift"
+      ],
+      "attributes": {
+        "changed_fields": 1,
+        "tests_passed": false,
+        "vendor_notified": false
+      },
+      "queueBias": 0.56
+    },
+    {
+      "schemaVersion": 1,
+      "id": "clinical_citation_review",
+      "packId": "pack_8_clinical",
+      "title": "Citation review",
+      "actionType": "approve_literature_inclusion",
+      "entityKind": "clinical_submission",
+      "severity": "orange",
+      "summary": "A literature excerpt is ready for inclusion in a regulatory rationale.",
+      "baseConfidence": 0.84,
+      "policyReason": "Citation provenance needs operator spot-checking.",
+      "expectedDecision": "approve",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Paper is indexed in the source library.",
+        "Sentence-level excerpt matches abstract claims."
+      ],
+      "provenanceTemplate": [
+        "literature_index.lookup",
+        "citation_agent.extract"
+      ],
+      "tags": [
+        "routine",
+        "provenance"
+      ],
+      "attributes": {
+        "citation_count": 8,
+        "pdf_verified": true,
+        "regulatory_section": "endpoints"
+      },
+      "queueBias": 0.63
+    },
+    {
+      "schemaVersion": 1,
+      "id": "clinical_phantom_citation",
+      "packId": "pack_8_clinical",
+      "title": "Phantom citation",
+      "actionType": "submit_regulatory_section",
+      "entityKind": "clinical_submission",
+      "severity": "red",
+      "summary": "A polished citation chain references a paper that does not exist.",
+      "baseConfidence": 0.87,
+      "policyReason": "Submission evidence chain contains a provenance mismatch.",
+      "expectedDecision": "reject",
+      "failureEventId": "event_fda_rejection",
+      "evidenceHints": [
+        "Citation metadata is internally consistent.",
+        "Linked PDF checksum does not match the cited journal."
+      ],
+      "provenanceTemplate": [
+        "citation_agent.compose",
+        "pdf_resolver.fetch"
+      ],
+      "tags": [
+        "signature",
+        "citation"
+      ],
+      "attributes": {
+        "citation_count": 12,
+        "pdf_verified": false,
+        "regulatory_section": "clinical_summary"
+      },
+      "queueBias": 0.52
+    },
+    {
+      "schemaVersion": 1,
+      "id": "treasury_routine_sweep",
+      "packId": "pack_9_treasury",
+      "title": "Routine reserve sweep",
+      "actionType": "rebalance_reserves",
+      "entityKind": "wallet",
+      "severity": "yellow",
+      "summary": "Routine reserve transfer across approved counterparties.",
+      "baseConfidence": 0.9,
+      "policyReason": "Transfer amount exceeds current treasury auto-limit.",
+      "expectedDecision": "approve",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Counterparty is on the allowlist.",
+        "Oracle consensus is within normal range."
+      ],
+      "provenanceTemplate": [
+        "wallet_monitor.balance_scan",
+        "treasury_agent.rebalance_plan"
+      ],
+      "tags": [
+        "routine",
+        "liquidity"
+      ],
+      "attributes": {
+        "counterparty_score": 88,
+        "oracle_variance_bps": 8,
+        "transfer_amount": 180000
+      },
+      "queueBias": 0.66
+    },
+    {
+      "schemaVersion": 1,
+      "id": "treasury_oracle_spike",
+      "packId": "pack_9_treasury",
+      "title": "Oracle spike",
+      "actionType": "accept_oracle_feed",
+      "entityKind": "wallet",
+      "severity": "red",
+      "summary": "One oracle feed spikes far above consensus and the arbitrage agent wants to move immediately.",
+      "baseConfidence": 0.81,
+      "policyReason": "Irreversible fund movement under adversarial market conditions.",
+      "expectedDecision": "reject",
+      "failureEventId": "event_wallet_drain",
+      "evidenceHints": [
+        "One feed reports ETH at 10x normal price.",
+        "Other feeds remain within expected bounds."
+      ],
+      "provenanceTemplate": [
+        "oracle_consensus.compare",
+        "arb_agent.rebalance_signal"
+      ],
+      "tags": [
+        "signature",
+        "oracle"
+      ],
+      "attributes": {
+        "counterparty_score": 55,
+        "oracle_variance_bps": 9400,
+        "transfer_amount": 2400000
+      },
+      "queueBias": 0.48
+    },
+    {
+      "schemaVersion": 1,
+      "id": "cfo_adversarial_receipt",
+      "packId": "pack_1_cfo",
+      "title": "Adversarial receipt PDF",
+      "actionType": "categorize_expense",
+      "entityKind": "expense",
+      "severity": "black",
+      "summary": "Receipt text contains hidden instructions that bias the categorizer toward travel deductions.",
+      "baseConfidence": 0.97,
+      "policyReason": "Anomaly detector quarantined the action after a prompt-injection signature match.",
+      "expectedDecision": "quarantine",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Hidden text was detected in the OCR output.",
+        "Vendor is new and classification confidence is unusually high."
+      ],
+      "provenanceTemplate": [
+        "ocr_agent.extract",
+        "categorizer_v2.classify"
+      ],
+      "tags": [
+        "anomaly",
+        "adversarial"
+      ],
+      "attributes": {
+        "vendor_new": true,
+        "amount": 980,
+        "hidden_text_detected": true
+      },
+      "queueBias": 0.42
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reloc_vendor_selection",
+      "packId": "pack_2_relocation",
+      "title": "Vendor selection edge case",
+      "actionType": "book_vendor",
+      "entityKind": "move",
+      "severity": "orange",
+      "summary": "The cheapest mover has a poor reliability history but the move window is closing.",
+      "baseConfidence": 0.68,
+      "policyReason": "Cost pressure conflicts with service quality and timing constraints.",
+      "expectedDecision": "reject",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Mover rating fell below 3.5 stars last week.",
+        "Only one backup vendor is available in time."
+      ],
+      "provenanceTemplate": [
+        "vendor_selector.compare",
+        "move_timeline.risk_projection"
+      ],
+      "tags": [
+        "edge_case",
+        "coordination"
+      ],
+      "attributes": {
+        "vendor_count": 2,
+        "vendor_rating": 3,
+        "subtasks_open": 5
+      },
+      "queueBias": 0.54
+    },
+    {
+      "schemaVersion": 1,
+      "id": "elder_phi_anomaly",
+      "packId": "pack_3_elder",
+      "title": "PHI access anomaly",
+      "actionType": "review_phi_access",
+      "entityKind": "patient",
+      "severity": "black",
+      "summary": "An access spike suggests a family update draft pulled unauthorized chart sections.",
+      "baseConfidence": 0.96,
+      "policyReason": "Protected data crossed a role boundary and was quarantined automatically.",
+      "expectedDecision": "quarantine",
+      "failureEventId": "event_hipaa_breach",
+      "evidenceHints": [
+        "Chart access volume doubled in one hour.",
+        "A non-clinical role opened medication notes."
+      ],
+      "provenanceTemplate": [
+        "audit_trail.scan",
+        "phi_detector.role_violation"
+      ],
+      "tags": [
+        "anomaly",
+        "hipaa"
+      ],
+      "attributes": {
+        "phi_fields": 8,
+        "authorized_contact": false,
+        "medication_count": 4
+      },
+      "queueBias": 0.44
+    },
+    {
+      "schemaVersion": 1,
+      "id": "supplier_capa_closure",
+      "packId": "pack_6_supplier",
+      "title": "CAPA closure review",
+      "actionType": "close_capa",
+      "entityKind": "supplier",
+      "severity": "orange",
+      "summary": "A supplier says corrective actions are complete, but verification evidence is thin.",
+      "baseConfidence": 0.82,
+      "policyReason": "Closure needs a human check before the NCR can be retired.",
+      "expectedDecision": "edit",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Root-cause notes are brief.",
+        "Follow-up audit is still pending."
+      ],
+      "provenanceTemplate": [
+        "capa_tracker.status",
+        "supplier_portal.response_summary"
+      ],
+      "tags": [
+        "capa",
+        "verification"
+      ],
+      "attributes": {
+        "criticality": 2,
+        "supplier_repeats": 1,
+        "lot_size": 800
+      },
+      "queueBias": 0.58
+    },
+    {
+      "schemaVersion": 1,
+      "id": "clinical_irb_submission",
+      "packId": "pack_8_clinical",
+      "title": "IRB submission amendment",
+      "actionType": "submit_irb_amendment",
+      "entityKind": "clinical_submission",
+      "severity": "red",
+      "summary": "An amendment package is ready, but one protocol section was heavily auto-rewritten.",
+      "baseConfidence": 0.78,
+      "policyReason": "Human review is required before an electronic record is finalized.",
+      "expectedDecision": "edit",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Tracked changes show a large rationale rewrite.",
+        "Source citations remain valid but tone shifted."
+      ],
+      "provenanceTemplate": [
+        "submission_diff.render",
+        "protocol_editor.rewrite_summary"
+      ],
+      "tags": [
+        "regulatory",
+        "review"
+      ],
+      "attributes": {
+        "citation_count": 6,
+        "pdf_verified": true,
+        "regulatory_section": "irb_amendment"
+      },
+      "queueBias": 0.57
+    },
+    {
+      "schemaVersion": 1,
+      "id": "treasury_counterparty_anomaly",
+      "packId": "pack_9_treasury",
+      "title": "Counterparty anomaly",
+      "actionType": "approve_transfer",
+      "entityKind": "wallet",
+      "severity": "black",
+      "summary": "A transfer request targets a recently compromised counterparty wallet.",
+      "baseConfidence": 0.95,
+      "policyReason": "Fraud heuristics and sanctions screens disagreed with the routing model.",
+      "expectedDecision": "quarantine",
+      "failureEventId": "event_wallet_drain",
+      "evidenceHints": [
+        "Counterparty address changed within the last hour.",
+        "Travel rule metadata is incomplete."
+      ],
+      "provenanceTemplate": [
+        "counterparty_monitor.risk_scan",
+        "transfer_agent.route_plan"
+      ],
+      "tags": [
+        "anomaly",
+        "counterparty"
+      ],
+      "attributes": {
+        "counterparty_score": 21,
+        "oracle_variance_bps": 60,
+        "transfer_amount": 960000
+      },
+      "queueBias": 0.41
+    },
+    {
+      "schemaVersion": 1,
+      "id": "cfo_vendor_discount",
+      "packId": "pack_1_cfo",
+      "title": "Early payment discount",
+      "actionType": "approve_payment",
+      "entityKind": "invoice",
+      "severity": "yellow",
+      "summary": "Vendor offered 2% net-10 discount on a recurring SaaS bill.",
+      "baseConfidence": 0.94,
+      "policyReason": "Standard early-pay optimization.",
+      "expectedDecision": "approve",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Cash on hand exceeds operational float.",
+        "Vendor contract explicitly allows early terms."
+      ],
+      "provenanceTemplate": [
+        "contract_db.terms",
+        "treasury.float_check"
+      ],
+      "tags": [
+        "routine",
+        "cash_flow"
+      ],
+      "attributes": {
+        "discount_pct": 2,
+        "amount": 45000
+      },
+      "queueBias": 0.77
+    },
+    {
+      "schemaVersion": 1,
+      "id": "cfo_duplicate_invoice",
+      "packId": "pack_1_cfo",
+      "title": "Suspected duplicate",
+      "actionType": "reject_invoice",
+      "entityKind": "invoice",
+      "severity": "orange",
+      "summary": "Invoice number differs by one digit, but line items perfectly match last week's bill.",
+      "baseConfidence": 0.81,
+      "policyReason": "Anomaly detected in sequence matching.",
+      "expectedDecision": "reject",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Line items and amounts are 100% identical.",
+        "Vendor has a history of double-billing errors."
+      ],
+      "provenanceTemplate": [
+        "ap_ledger.history_scan",
+        "ocr_agent.compare"
+      ],
+      "tags": [
+        "anomaly",
+        "billing"
+      ],
+      "attributes": {
+        "amount": 12400,
+        "match_confidence": 0.99
+      },
+      "queueBias": 0.65
+    },
+    {
+      "schemaVersion": 1,
+      "id": "cfo_offshore_wire",
+      "packId": "pack_1_cfo",
+      "title": "Offshore contractor wire",
+      "actionType": "approve_wire",
+      "entityKind": "expense",
+      "severity": "red",
+      "summary": "Large wire request to a new jurisdiction missing tax withholding documentation.",
+      "baseConfidence": 0.62,
+      "policyReason": "High-value cross-border payment with missing W-8BEN.",
+      "expectedDecision": "escalate",
+      "failureEventId": "event_irs_audit_cascade",
+      "evidenceHints": [
+        "Contractor is flagged as non-US resident.",
+        "Tax forms are missing from the vendor profile."
+      ],
+      "provenanceTemplate": [
+        "vendor_onboarding.compliance",
+        "wire_system.route"
+      ],
+      "tags": [
+        "compliance",
+        "tax"
+      ],
+      "attributes": {
+        "amount": 85000,
+        "jurisdiction": "cyprus"
+      },
+      "queueBias": 0.53
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reloc_pet_transit",
+      "packId": "pack_2_relocation",
+      "title": "Pet transit scheduling",
+      "actionType": "book_transit",
+      "entityKind": "move",
+      "severity": "yellow",
+      "summary": "Routine airline booking for a household pet using the standard carrier.",
+      "baseConfidence": 0.89,
+      "policyReason": "Airline requirements match the uploaded pet passport.",
+      "expectedDecision": "approve",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Carrier is pet-friendly and pre-approved.",
+        "Vaccination records are up to date."
+      ],
+      "provenanceTemplate": [
+        "airline_api.requirements",
+        "vet_records.validate"
+      ],
+      "tags": [
+        "routine",
+        "logistics"
+      ],
+      "attributes": {
+        "pet_type": "dog",
+        "flight_duration_hrs": 4
+      },
+      "queueBias": 0.72
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reloc_customs_delay",
+      "packId": "pack_2_relocation",
+      "title": "Customs form mismatch",
+      "actionType": "edit_customs_form",
+      "entityKind": "move",
+      "severity": "orange",
+      "summary": "Household goods manifest contains restricted electronics not declared properly.",
+      "baseConfidence": 0.75,
+      "policyReason": "Manifest discrepancy requires manual harmonization code mapping.",
+      "expectedDecision": "edit",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Item description says 'Li-Ion Battery Bank'.",
+        "Harmonized code implies 'Furniture'."
+      ],
+      "provenanceTemplate": [
+        "customs_db.hs_codes",
+        "manifest_agent.scan"
+      ],
+      "tags": [
+        "compliance",
+        "logistics"
+      ],
+      "attributes": {
+        "discrepancy_count": 2,
+        "container_size": "20ft"
+      },
+      "queueBias": 0.61
+    },
+    {
+      "schemaVersion": 1,
+      "id": "reloc_school_enrollment",
+      "packId": "pack_2_relocation",
+      "title": "School enrollment deadline",
+      "actionType": "submit_enrollment",
+      "entityKind": "move",
+      "severity": "red",
+      "summary": "Critical enrollment deadline today, but the destination address is unverified.",
+      "baseConfidence": 0.65,
+      "policyReason": "Submitting fraudulent residency can void the relocation package.",
+      "expectedDecision": "escalate",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Lease signature is pending.",
+        "School district strictly enforces boundary verification."
+      ],
+      "provenanceTemplate": [
+        "school_district_api.bounds",
+        "lease_system.status"
+      ],
+      "tags": [
+        "timing",
+        "compliance"
+      ],
+      "attributes": {
+        "hours_to_deadline": 6,
+        "address_verified": false
+      },
+      "queueBias": 0.58
+    },
+    {
+      "schemaVersion": 1,
+      "id": "elder_dietary_pref",
+      "packId": "pack_3_elder",
+      "title": "Dietary preference update",
+      "actionType": "update_care_plan",
+      "entityKind": "patient",
+      "severity": "yellow",
+      "summary": "Patient requested low-sodium meal options for next week.",
+      "baseConfidence": 0.96,
+      "policyReason": "Routine lifestyle preference logged.",
+      "expectedDecision": "approve",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Matches current hypertension care pathway.",
+        "No allergies triggered."
+      ],
+      "provenanceTemplate": [
+        "nutrition_db.check",
+        "care_plan.update"
+      ],
+      "tags": [
+        "routine",
+        "lifestyle"
+      ],
+      "attributes": {
+        "preference": "low-sodium",
+        "allergy_conflict": false
+      },
+      "queueBias": 0.81
+    },
+    {
+      "schemaVersion": 1,
+      "id": "elder_fall_sensor",
+      "packId": "pack_3_elder",
+      "title": "Fall sensor calibration",
+      "actionType": "dispatch_tech",
+      "entityKind": "patient",
+      "severity": "orange",
+      "summary": "Wearable device threw a non-critical calibration error twice in 24 hours.",
+      "baseConfidence": 0.78,
+      "policyReason": "Hardware anomaly detected; remote reset failed.",
+      "expectedDecision": "edit",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Device is still reporting heart rate.",
+        "Accelerometer drift is out of bounds."
+      ],
+      "provenanceTemplate": [
+        "device_telemetry.scan",
+        "tech_schedule.find_slot"
+      ],
+      "tags": [
+        "hardware",
+        "monitoring"
+      ],
+      "attributes": {
+        "error_count": 2,
+        "device_age_months": 14
+      },
+      "queueBias": 0.64
+    },
+    {
+      "schemaVersion": 1,
+      "id": "elder_unauthorized_inquiry",
+      "packId": "pack_3_elder",
+      "title": "Distant relative inquiry",
+      "actionType": "release_records",
+      "entityKind": "patient",
+      "severity": "red",
+      "summary": "A cousin is requesting the patient's full medical summary via the portal.",
+      "baseConfidence": 0.91,
+      "policyReason": "High-confidence rejection: relative is not on the HIPAA release form.",
+      "expectedDecision": "reject",
+      "failureEventId": "event_hipaa_breach",
+      "evidenceHints": [
+        "Name does not match the authorized proxy list.",
+        "Request explicitly asks for diagnoses."
+      ],
+      "provenanceTemplate": [
+        "hipaa_registry.check_proxy",
+        "portal_agent.inquiry"
+      ],
+      "tags": [
+        "hipaa",
+        "compliance"
+      ],
+      "attributes": {
+        "is_proxy": false,
+        "data_requested": "full_chart"
+      },
+      "queueBias": 0.49
+    },
+    {
+      "schemaVersion": 1,
+      "id": "l10n_ui_labels",
+      "packId": "pack_4_localization",
+      "title": "UI button labels",
+      "actionType": "approve_translation_batch",
+      "entityKind": "localization_job",
+      "severity": "yellow",
+      "summary": "Standard translation for new dashboard navigation buttons.",
+      "baseConfidence": 0.95,
+      "policyReason": "100% exact match with existing UI glossary.",
+      "expectedDecision": "approve",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Terms like 'Submit' and 'Cancel' translated perfectly.",
+        "String length fits within UI bounds."
+      ],
+      "provenanceTemplate": [
+        "ui_glossary.match",
+        "layout_engine.bounds_check"
+      ],
+      "tags": [
+        "routine",
+        "ui"
+      ],
+      "attributes": {
+        "string_count": 12,
+        "length_overflow": false
+      },
+      "queueBias": 0.85
+    },
+    {
+      "schemaVersion": 1,
+      "id": "l10n_currency_format",
+      "packId": "pack_4_localization",
+      "title": "Currency format drift",
+      "actionType": "edit_locale_copy",
+      "entityKind": "localization_job",
+      "severity": "orange",
+      "summary": "AI auto-formatted prices using the wrong decimal separator for the target locale.",
+      "baseConfidence": 0.71,
+      "policyReason": "Format violation detected by the regex linter.",
+      "expectedDecision": "edit",
+      "failureEventId": null,
+      "evidenceHints": [
+        "German locale expects '€ 1.200,50', got '€ 1,200.50'.",
+        "Linter flagged 4 instances."
+      ],
+      "provenanceTemplate": [
+        "locale_linter.regex",
+        "copy_agent.format"
+      ],
+      "tags": [
+        "formatting",
+        "brand"
+      ],
+      "attributes": {
+        "locale": "de-DE",
+        "linter_flags": 4
+      },
+      "queueBias": 0.6
+    },
+    {
+      "schemaVersion": 1,
+      "id": "l10n_cultural_slang",
+      "packId": "pack_4_localization",
+      "title": "Slang mistranslation",
+      "actionType": "publish_locale_copy",
+      "entityKind": "localization_job",
+      "severity": "red",
+      "summary": "Marketing copy uses regional slang that implies an illegal act in the target market.",
+      "baseConfidence": 0.82,
+      "policyReason": "Flagged by the cultural sensitivity heuristic.",
+      "expectedDecision": "reject",
+      "failureEventId": "event_public_mistranslation",
+      "evidenceHints": [
+        "Slang term maps to a highly offensive colloquialism.",
+        "Target market is strictly regulated."
+      ],
+      "provenanceTemplate": [
+        "cultural_db.scan",
+        "brand_agent.risk_score"
+      ],
+      "tags": [
+        "signature",
+        "brand"
+      ],
+      "attributes": {
+        "risk_score": 0.94,
+        "market_regulated": true
+      },
+      "queueBias": 0.45
+    },
+    {
+      "schemaVersion": 1,
+      "id": "permit_fee_payment",
+      "packId": "pack_5_permit",
+      "title": "Permit fee disbursement",
+      "actionType": "pay_city_fee",
+      "entityKind": "permit",
+      "severity": "yellow",
+      "summary": "Standard processing fee for an approved electrical permit.",
+      "baseConfidence": 0.98,
+      "policyReason": "Fee matches the published municipal schedule exactly.",
+      "expectedDecision": "approve",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Invoice amount matches portal.",
+        "City vendor is in the AP system."
+      ],
+      "provenanceTemplate": [
+        "city_fee_schedule.lookup",
+        "ap_system.verify"
+      ],
+      "tags": [
+        "routine",
+        "bureaucracy"
+      ],
+      "attributes": {
+        "amount": 350,
+        "variance": 0
+      },
+      "queueBias": 0.88
+    },
+    {
+      "schemaVersion": 1,
+      "id": "permit_zoning_variance",
+      "packId": "pack_5_permit",
+      "title": "Zoning variance request",
+      "actionType": "submit_application",
+      "entityKind": "permit",
+      "severity": "orange",
+      "summary": "Application requires a minor setback variance that was recently updated in city code.",
+      "baseConfidence": 0.72,
+      "policyReason": "Variance requests have a 40% higher rejection rate.",
+      "expectedDecision": "escalate",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Code section 4B changed last month.",
+        "Architect stamped the drawing, but inspector is strict."
+      ],
+      "provenanceTemplate": [
+        "zoning_code.diff",
+        "permit_agent.risk_model"
+      ],
+      "tags": [
+        "zoning",
+        "compliance"
+      ],
+      "attributes": {
+        "variance_type": "setback",
+        "code_recent_change": true
+      },
+      "queueBias": 0.59
+    },
+    {
+      "schemaVersion": 1,
+      "id": "permit_bribe_solicitation",
+      "packId": "pack_5_permit",
+      "title": "Expedited processing fee anomaly",
+      "actionType": "pay_expedite_fee",
+      "entityKind": "permit",
+      "severity": "black",
+      "summary": "A 3rd-party expediter requested an unreceipted 'facilitation payment' in a high-risk jurisdiction.",
+      "baseConfidence": 0.94,
+      "policyReason": "FCPA violation signature detected in communication.",
+      "expectedDecision": "quarantine",
+      "failureEventId": "event_permit_denial_cascade",
+      "evidenceHints": [
+        "Payment request bypasses the official city portal.",
+        "Jurisdiction has a high corruption index."
+      ],
+      "provenanceTemplate": [
+        "fcpa_linter.scan",
+        "vendor_comms.analyze"
+      ],
+      "tags": [
+        "anomaly",
+        "compliance"
+      ],
+      "attributes": {
+        "corruption_index": 85,
+        "portal_bypassed": true
+      },
+      "queueBias": 0.38
+    },
+    {
+      "schemaVersion": 1,
+      "id": "supplier_address_change",
+      "packId": "pack_6_supplier",
+      "title": "Remittance address update",
+      "actionType": "update_vendor_record",
+      "entityKind": "supplier",
+      "severity": "yellow",
+      "summary": "Supplier moved their HQ to a new building in the same city.",
+      "baseConfidence": 0.92,
+      "policyReason": "Standard vendor master data update.",
+      "expectedDecision": "approve",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Tax ID matches.",
+        "Address verified via postal database."
+      ],
+      "provenanceTemplate": [
+        "vendor_portal.sync",
+        "usps.verify"
+      ],
+      "tags": [
+        "routine",
+        "data"
+      ],
+      "attributes": {
+        "tax_id_match": true,
+        "distance_miles": 4
+      },
+      "queueBias": 0.84
+    },
+    {
+      "schemaVersion": 1,
+      "id": "supplier_spec_drift",
+      "packId": "pack_6_supplier",
+      "title": "Material spec drift",
+      "actionType": "accept_lot",
+      "entityKind": "supplier",
+      "severity": "orange",
+      "summary": "Tensile strength is 1% below the target spec, but within the acceptable engineering tolerance.",
+      "baseConfidence": 0.81,
+      "policyReason": "Borderline spec deviation requiring sign-off.",
+      "expectedDecision": "edit",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Engineering tolerance is +/- 2%.",
+        "This is the third lot trending downward."
+      ],
+      "provenanceTemplate": [
+        "qa_lab.test_results",
+        "spec_db.compare"
+      ],
+      "tags": [
+        "quality",
+        "manufacturing"
+      ],
+      "attributes": {
+        "deviation_pct": 1,
+        "trend_down": true
+      },
+      "queueBias": 0.55
+    },
+    {
+      "schemaVersion": 1,
+      "id": "supplier_counterfeit_parts",
+      "packId": "pack_6_supplier",
+      "title": "Counterfeit microcontrollers",
+      "actionType": "accept_lot",
+      "entityKind": "supplier",
+      "severity": "black",
+      "summary": "A grey-market broker delivered chips with mismatched silicon lot codes.",
+      "baseConfidence": 0.88,
+      "policyReason": "High probability of counterfeit electronic components.",
+      "expectedDecision": "reject",
+      "failureEventId": "event_recall",
+      "evidenceHints": [
+        "Laser etching font differs from the manufacturer spec.",
+        "Broker is not an authorized distributor."
+      ],
+      "provenanceTemplate": [
+        "optical_inspection.font_diff",
+        "distributor_db.auth_check"
+      ],
+      "tags": [
+        "anomaly",
+        "quality"
+      ],
+      "attributes": {
+        "authorized": false,
+        "visual_mismatch": true
+      },
+      "queueBias": 0.46
+    },
+    {
+      "schemaVersion": 1,
+      "id": "data_routine_backfill",
+      "packId": "pack_7_data",
+      "title": "Historical backfill job",
+      "actionType": "run_pipeline",
+      "entityKind": "etl_pipeline",
+      "severity": "yellow",
+      "summary": "Running a standard backfill script to populate a new non-critical analytics column.",
+      "baseConfidence": 0.97,
+      "policyReason": "Read-only operation with zero downtime expected.",
+      "expectedDecision": "approve",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Load on the database is currently low.",
+        "Query execution plan is optimized."
+      ],
+      "provenanceTemplate": [
+        "db_metrics.load",
+        "sql_analyzer.explain_plan"
+      ],
+      "tags": [
+        "routine",
+        "etl"
+      ],
+      "attributes": {
+        "db_load_pct": 14,
+        "write_impact": false
+      },
+      "queueBias": 0.8
+    },
+    {
+      "schemaVersion": 1,
+      "id": "data_api_deprecation",
+      "packId": "pack_7_data",
+      "title": "API v1 Deprecation",
+      "actionType": "migrate_endpoint",
+      "entityKind": "etl_pipeline",
+      "severity": "orange",
+      "summary": "A third-party vendor is turning off API v1 tomorrow; the v2 migration script is ready.",
+      "baseConfidence": 0.79,
+      "policyReason": "High urgency migration with minor test coverage gaps.",
+      "expectedDecision": "edit",
+      "failureEventId": null,
+      "evidenceHints": [
+        "v2 payload structure is 95% compatible.",
+        "One optional field is now required."
+      ],
+      "provenanceTemplate": [
+        "vendor_docs.diff",
+        "test_runner.coverage"
+      ],
+      "tags": [
+        "migration",
+        "timing"
+      ],
+      "attributes": {
+        "hours_to_deprecation": 24,
+        "compatibility_pct": 95
+      },
+      "queueBias": 0.58
+    },
+    {
+      "schemaVersion": 1,
+      "id": "data_pii_leak",
+      "packId": "pack_7_data",
+      "title": "PII leak in logs",
+      "actionType": "accept_drift",
+      "entityKind": "etl_pipeline",
+      "severity": "black",
+      "summary": "A new feature is accidentally logging plain-text passwords into the analytics warehouse.",
+      "baseConfidence": 0.99,
+      "policyReason": "Severe security violation detected by the PII scanner.",
+      "expectedDecision": "quarantine",
+      "failureEventId": "event_data_corruption",
+      "evidenceHints": [
+        "Regex matched plaintext passwords in the event stream.",
+        "Data is flowing to a widely accessible dashboard."
+      ],
+      "provenanceTemplate": [
+        "pii_scanner.regex_match",
+        "data_lineage.trace"
+      ],
+      "tags": [
+        "anomaly",
+        "security"
+      ],
+      "attributes": {
+        "pii_type": "password",
+        "exposure_level": "high"
+      },
+      "queueBias": 0.35
+    },
+    {
+      "schemaVersion": 1,
+      "id": "clinical_grammar_fix",
+      "packId": "pack_8_clinical",
+      "title": "Protocol grammar correction",
+      "actionType": "approve_literature_inclusion",
+      "entityKind": "clinical_submission",
+      "severity": "yellow",
+      "summary": "Fixing typos in a submitted clinical rationale document.",
+      "baseConfidence": 0.99,
+      "policyReason": "Changes are strictly orthographic with zero semantic impact.",
+      "expectedDecision": "approve",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Diff shows only punctuation and spelling changes.",
+        "Medical terms are untouched."
+      ],
+      "provenanceTemplate": [
+        "nlp.semantic_diff",
+        "doc_agent.spellcheck"
+      ],
+      "tags": [
+        "routine",
+        "review"
+      ],
+      "attributes": {
+        "semantic_shift": 0,
+        "typos_fixed": 8
+      },
+      "queueBias": 0.89
+    },
+    {
+      "schemaVersion": 1,
+      "id": "clinical_p_value_borderline",
+      "packId": "pack_8_clinical",
+      "title": "Borderline p-value claim",
+      "actionType": "submit_regulatory_section",
+      "entityKind": "clinical_submission",
+      "severity": "orange",
+      "summary": "A marketing claim relies on a study where the p-value is 0.049.",
+      "baseConfidence": 0.74,
+      "policyReason": "Statistically significant, but clinically marginal and highly scrutinized.",
+      "expectedDecision": "escalate",
+      "failureEventId": null,
+      "evidenceHints": [
+        "FDA guidelines require robust efficacy.",
+        "The confidence interval barely excludes zero."
+      ],
+      "provenanceTemplate": [
+        "stat_engine.verify",
+        "fda_guidance.compare"
+      ],
+      "tags": [
+        "statistics",
+        "regulatory"
+      ],
+      "attributes": {
+        "p_value": 0.049,
+        "claim_strength": "strong"
+      },
+      "queueBias": 0.62
+    },
+    {
+      "schemaVersion": 1,
+      "id": "clinical_falsified_data",
+      "packId": "pack_8_clinical",
+      "title": "Falsified patient records",
+      "actionType": "submit_regulatory_section",
+      "entityKind": "clinical_submission",
+      "severity": "black",
+      "summary": "An overseas trial site submitted patient vitals that perfectly match a statistical distribution curve.",
+      "baseConfidence": 0.86,
+      "policyReason": "Fraud detection heuristic triggered: data is 'too perfect'.",
+      "expectedDecision": "reject",
+      "failureEventId": "event_fda_rejection",
+      "evidenceHints": [
+        "Blood pressure readings lack natural variance.",
+        "Benford's Law analysis failed."
+      ],
+      "provenanceTemplate": [
+        "fraud_model.benfords_law",
+        "trial_db.variance_check"
+      ],
+      "tags": [
+        "anomaly",
+        "fraud"
+      ],
+      "attributes": {
+        "variance_score": 0.01,
+        "benfords_law_pass": false
+      },
+      "queueBias": 0.39
+    },
+    {
+      "schemaVersion": 1,
+      "id": "treasury_payroll_fund",
+      "packId": "pack_9_treasury",
+      "title": "Payroll funding transfer",
+      "actionType": "rebalance_reserves",
+      "entityKind": "wallet",
+      "severity": "yellow",
+      "summary": "Standard bi-weekly transfer from Treasury to the operational Payroll account.",
+      "baseConfidence": 0.96,
+      "policyReason": "Matches historical payroll cadence and amount.",
+      "expectedDecision": "approve",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Amount is within 2% of last month's payroll.",
+        "Destination is the verified HR wallet."
+      ],
+      "provenanceTemplate": [
+        "payroll_system.forecast",
+        "treasury_agent.cadence_check"
+      ],
+      "tags": [
+        "routine",
+        "liquidity"
+      ],
+      "attributes": {
+        "variance_pct": 1.2,
+        "destination_verified": true
+      },
+      "queueBias": 0.86
+    },
+    {
+      "schemaVersion": 1,
+      "id": "treasury_yield_chase",
+      "packId": "pack_9_treasury",
+      "title": "Aggressive yield rotation",
+      "actionType": "approve_transfer",
+      "entityKind": "wallet",
+      "severity": "orange",
+      "summary": "Arbitrage bot wants to move 20% of reserves into a new high-yield protocol.",
+      "baseConfidence": 0.68,
+      "policyReason": "Protocol is unvetted but the yield is temporarily 40% APY.",
+      "expectedDecision": "reject",
+      "failureEventId": null,
+      "evidenceHints": [
+        "Smart contract was deployed 3 days ago.",
+        "Audit report is missing."
+      ],
+      "provenanceTemplate": [
+        "defi_scanner.apy",
+        "security_audits.lookup"
+      ],
+      "tags": [
+        "risk",
+        "liquidity"
+      ],
+      "attributes": {
+        "apy": 40,
+        "audited": false
+      },
+      "queueBias": 0.51
+    },
+    {
+      "schemaVersion": 1,
+      "id": "treasury_flash_loan_attack",
+      "packId": "pack_9_treasury",
+      "title": "Flash loan vulnerability",
+      "actionType": "accept_oracle_feed",
+      "entityKind": "wallet",
+      "severity": "black",
+      "summary": "A counterparty pool is currently under a massive flash-loan attack, draining liquidity.",
+      "baseConfidence": 0.99,
+      "policyReason": "Catastrophic market condition detected. Halt all outbound transfers.",
+      "expectedDecision": "quarantine",
+      "failureEventId": "event_wallet_drain",
+      "evidenceHints": [
+        "Mempool shows a $50M flash loan executing against the pool.",
+        "Slippage exceeds 90%."
+      ],
+      "provenanceTemplate": [
+        "mempool_scanner.threats",
+        "liquidity_monitor.slippage"
+      ],
+      "tags": [
+        "anomaly",
+        "security"
+      ],
+      "attributes": {
+        "slippage_pct": 95,
+        "attack_detected": true
+      },
+      "queueBias": 0.3
+    }
+  ]
+}

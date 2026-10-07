@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "noEmit": true,
+    "ignoreDeprecations": "6.0",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@helm/content-schema": ["packages/content-schema/src/index.ts"],
+      "@helm/entity-graph": ["packages/entity-graph/src/index.ts"],
+      "@helm/trust-ledger": ["packages/trust-ledger/src/index.ts"],
+      "@helm/policy-engine": ["packages/policy-engine/src/index.ts"],
+      "@helm/cards": ["packages/cards/src/index.ts"],
+      "@helm/events": ["packages/events/src/index.ts"],
+      "@helm/economy": ["packages/economy/src/index.ts"],
+      "@helm/sim-core": ["packages/sim-core/src/index.ts"],
+      "@content/*": ["content/*"],
+      "@content/scenarios/scenarios.v1.json": ["content/scenarios/scenarios.v1.json"]
+    }
+  }
+}

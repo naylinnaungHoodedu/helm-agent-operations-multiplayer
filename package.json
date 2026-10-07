@@ -1,0 +1,29 @@
+{
+  "name": "helm-sim",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "packageManager": "npm@11.9.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:game": "npm run dev --workspace @helm/game -- --host 127.0.0.1",
+    "dev:web": "npm run dev --workspace @helm/web",
+    "dev:server": "npm run dev --workspace @helm/server",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:game\"",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "vitest run",
+    "validate:content": "vitest run tests/content",
+    "build": "npm run validate:content && npm run build --workspace @helm/game && npm run build --workspace @helm/server"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^25.6.0",
+    "concurrently": "^10.0.5",
+    "playwright": "^1.63.0",
+    "typescript": "^6.0.2",
+    "vitest": "^4.1.4"
+  }
+}
