@@ -1,5 +1,5 @@
 {
-  "name": "helm-sim",
+  "name": "helm-agent-operations-multiplayer",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -10,9 +10,8 @@
   ],
   "scripts": {
     "dev:game": "npm run dev --workspace @helm/game -- --host 127.0.0.1",
-    "dev:web": "npm run dev --workspace @helm/web",
     "dev:server": "npm run dev --workspace @helm/server",
-    "dev": "concurrently \"npm run dev:server\" \"npm run dev:game\"",
+    "dev": "node scripts/dev.mjs",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "vitest run",
     "validate:content": "vitest run tests/content",
@@ -21,7 +20,6 @@
   "devDependencies": {
     "@playwright/test": "^1.63.0",
     "@types/node": "^25.6.0",
-    "concurrently": "^10.0.5",
     "playwright": "^1.63.0",
     "typescript": "^6.0.2",
     "vitest": "^4.1.4"

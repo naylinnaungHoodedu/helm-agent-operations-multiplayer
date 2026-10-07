@@ -22,7 +22,6 @@ HELM Agent Operations is a browser-playable multiplayer control-room simulation 
 ```text
 apps/game        Vite React game client
 apps/server      Express and Socket.IO multiplayer server
-apps/web         Next.js launcher shell
 packages/*       Shared simulation, policy, economy, content, event, and entity packages
 content/*        Versioned game content catalogs
 tests/*          Unit and integration tests
@@ -96,4 +95,4 @@ npm run build
 
 ## Notes
 
-This repository intentionally excludes generated folders such as `node_modules`, `.next`, and build `dist` outputs. Recreate them with `npm install` and `npm run build`.
+This repository intentionally excludes generated folders such as `node_modules` and build `dist` outputs. Recreate them with `npm install` and `npm run build`.
