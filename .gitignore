@@ -12,3 +12,5 @@ coverage
 .docx_render_*
 fix*.py
 e2e_browser*.ts
+.sites-artifacts
+.sites-stage*
